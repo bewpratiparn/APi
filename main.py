@@ -17,7 +17,9 @@ import base64
 import uuid
 from datetime import datetime
 from jose import JWTError, jwt
-
+import re
+import json
+from fastapi.middleware.cors import CORSMiddleware
 
 logging.basicConfig(level=logging.INFO)
 
@@ -74,6 +76,17 @@ class Meat_Data(Base):
     meat_name = Column(String, index=True)
 
 
+class Veget_data(Base):
+    __tablename__ = "Veget_data"
+    veget_id = Column(Integer, primary_key=True, index=True)
+    veget_name = Column(String, index=True)
+
+
+class seasoning(Base):
+    __tablename__ = "seasoning"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)
+    
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -197,6 +210,12 @@ async def login(Username: str, Password: str, db: Session = Depends(get_db)):
     return {"access_token": Username, "token_type": "bearer"}
 
 
+@app.post("/logout")
+def logout(token: str = Depends(oauth2_scheme)):
+    # In a real application, you might want to add some additional logic here,
+    # like blacklisting the token or logging the user out from the application.
+    return {"message": "Logout successful"}
+
 
 @app.post("/shops/register/")
 async def register_shop(
@@ -274,7 +293,6 @@ async def read_item(shop_id: int, db: Session = Depends(get_db)):
     if item is None:
         raise HTTPException(status_code=404, detail="Item not found")
     return item
-
 
 @app.delete("/shop/delete/{shop_id}")
 async def delete_shop(shop_id: int, db: Session = Depends(get_db)):
@@ -391,6 +409,8 @@ def create_meat_data(meat_name: str, db: Session = Depends(get_db)):
     return db_meat
 
 
+
+
 @app.put("/meat/update/{meat_id}")
 async def update_meat(
     meat_id: int,
@@ -439,11 +459,15 @@ async def startup_event():
 # Print information about closing the database connection during shutdown
 
 
+
+
 @app.on_event("shutdown")
 async def shutdown_event():
     logging.info("Closing the database connection.")
     await database.disconnect()
 if __name__ == "__main__":
     import uvicorn
-
     uvicorn.run(app, host="127.0.0.1", port=8000)
+    
+
+
