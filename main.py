@@ -23,7 +23,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 logging.basicConfig(level=logging.INFO)
 
-DATABASE_URL = "postgresql://postgres:12345@localhost/Project"
+DATABASE_URL = "postgresql://postgres:1234@localhost/Project"
 
 engine = create_engine(DATABASE_URL)
 metadata = MetaData()
