@@ -20,6 +20,8 @@ from jose import JWTError, jwt
 import re
 import json
 from fastapi.middleware.cors import CORSMiddleware
+import requests
+
 
 logging.basicConfig(level=logging.INFO)
 
