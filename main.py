@@ -92,6 +92,19 @@ class seasoning(Base):
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+origins = [
+    "http://localhost:8000",
+    "http://localhost:3000",
+    "https://stackpython.co"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 database = Database(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
