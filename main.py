@@ -30,6 +30,18 @@ DATABASE_URL = "postgresql://postgres:1234@localhost/Project"
 engine = create_engine(DATABASE_URL)
 metadata = MetaData()
 
+app = FastAPI()
+
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins, you can specify specific origins instead
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
+
 Base = declarative_base()
 
 
@@ -91,20 +103,7 @@ class seasoning(Base):
     
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
-origins = [
-    "http://localhost:8000",
-    "http://localhost:3000",
-    "https://stackpython.co"
-]
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 database = Database(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
