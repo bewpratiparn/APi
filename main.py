@@ -19,8 +19,10 @@ from datetime import datetime
 from jose import JWTError, jwt
 import re
 import json
-from fastapi.middleware.cors import CORSMiddleware
+
 import requests
+from pydantic import BaseModel
+from fastapi.encoders import jsonable_encoder
 
 
 logging.basicConfig(level=logging.INFO)
@@ -30,17 +32,23 @@ DATABASE_URL = "postgresql://postgres:1234@localhost/Project"
 engine = create_engine(DATABASE_URL)
 metadata = MetaData()
 
-app = FastAPI()
+from fastapi.middleware.cors import CORSMiddleware
 
+app = FastAPI()
 
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins, you can specify specific origins instead
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],  
+    allow_headers=["*"],  
+    
 )
+
+class Loginclass(BaseModel):
+    username:str
+    password:str
 
 Base = declarative_base()
 
@@ -208,7 +216,10 @@ async def delete_user(user_id: int, db: Session = Depends(get_db)):
     return {"message": "User deleted successfully"}
 
 # User login
-
+dummy_user = {
+    "username": "cairocoders",
+    "password": "123456ednalan",
+}
 
 @app.post("/Login/")
 async def login(Username: str, Password: str, db: Session = Depends(get_db)):
