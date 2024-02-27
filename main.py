@@ -45,11 +45,6 @@ app.add_middleware(
     allow_headers=["*"],  
     
 )
-
-class Loginclass(BaseModel):
-    username:str
-    password:str
-
 Base = declarative_base()
 
 
