@@ -23,6 +23,7 @@ import json
 import requests
 from pydantic import BaseModel
 from fastapi.encoders import jsonable_encoder
+from fastapi.middleware.cors import CORSMiddleware
 
 
 logging.basicConfig(level=logging.INFO)
@@ -32,7 +33,7 @@ DATABASE_URL = "postgresql://postgres:1234@localhost/Project"
 engine = create_engine(DATABASE_URL)
 metadata = MetaData()
 
-from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI()
 
@@ -211,11 +212,6 @@ async def delete_user(user_id: int, db: Session = Depends(get_db)):
     return {"message": "User deleted successfully"}
 
 # User login
-dummy_user = {
-    "username": "cairocoders",
-    "password": "123456ednalan",
-}
-
 @app.post("/Login/")
 async def login(Username: str, Password: str, db: Session = Depends(get_db)):
 
