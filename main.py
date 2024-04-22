@@ -21,6 +21,8 @@ import re
 import json
 from fastapi.middleware.cors import CORSMiddleware
 
+app = FastAPI()
+
 logging.basicConfig(level=logging.INFO)
 
 DATABASE_URL = "postgresql://postgres:1234@localhost/Project"
@@ -29,6 +31,15 @@ engine = create_engine(DATABASE_URL)
 metadata = MetaData()
 
 Base = declarative_base()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["*"],
+)
 
 
 class User_info(Base):
@@ -89,7 +100,7 @@ class seasoning(Base):
     
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+
 
 database = Database(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
